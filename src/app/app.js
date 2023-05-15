@@ -2,9 +2,9 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-const indexRouter = require('../routers/index');
+const companyRouter = require('../routers/company');
 
 app.use(cors());
-app.use('/', indexRouter);
+app.use('/api/company', companyRouter);
 
 module.exports = app;
