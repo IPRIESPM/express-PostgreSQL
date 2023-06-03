@@ -11,7 +11,6 @@ const getDatabaseInstance = () => {
   if (!dbInstance) {
     dbInstance = pgp(connectionString);
   }
-
   return dbInstance;
 };
 

@@ -36,7 +36,8 @@ create table TFG_puestos(
 create table TFG_profesores(
     dni varchar(12) primary key,
     nombre varchar(100),
-    telefono integer
+    telefono integer,
+    contrasena VARCHAR(255)
 );
 
 create table TFG_anotaciones(
