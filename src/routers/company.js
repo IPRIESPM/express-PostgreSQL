@@ -5,67 +5,66 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const data = await db.one('SELECT * FROM TFG_empresa');
+    const data = await db.any('SELECT * FROM TFG_empresa');
     res.status(200).json(data);
   } catch (error) {
-    console.log(`Error ${error}`);
     res.status(501).json({ status: error });
   }
 });
 
-router.get('/create', async (req, res) => {
+router.get('/:cif', async (req, res) => {
   try {
-    await db.none(`create table TFG_empresa(
-            cif varchar(12) primary key,
-            nombre varchar(60),
-            localidad varchar(50),
-            comunidad varchar(50),
-            direccion varchar(100),
-            telefono integer
-          );`);
-    res.status(201).json({
-      status: true,
-      data: 'Data inserted correctly',
-    });
-  } catch (error) {
-    console.log(`Your program fail correctly ${error}`);
-    res.json('error');
-  }
-});
-
-router.get('/get/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      res.status(300).json({});
+    const { cif } = req.params;
+    if (!cif) {
+      res.status(400).json({ error: 'El CIF es requerido' });
     }
 
-    const data = await db.once('SELECT * FROM TFG_empresa WHERE cif = ?;', id);
-    res.status(200).json({
-      status: true,
-      data,
-    });
+    const data = await db.oneOrNone('SELECT * FROM TFG_empresa WHERE cif = $1', cif);
+    if (data) {
+      res.status(200).json({
+        status: true,
+        data,
+      });
+    } else {
+      res.status(404).json({ error: 'La empresa no existe' });
+    }
   } catch (error) {
-    res.status(500).json('Your program fail correctly ');
+    res.status(500).json({ error: 'Error al obtener la empresa' });
   }
 });
 
-router.get('/seed', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const newEmpresa = {
-      cif: 'A12345678',
-      nombre: 'Empresa A',
-      localidad: 'Ciudad A',
-      comunidad: 'Comunidad A',
-      direccion: 'Dirección A',
-      telefono: 123456789,
-    };
-    const data = await db.none('INSERT INTO TFG_empresa (cif, nombre, localidad, comunidad, direccion, telefono) VALUES ($1,$2,$3,$4,$5,$6) ', [newEmpresa.cif, newEmpresa.nombre, newEmpresa.localidad, newEmpresa.comunidad, newEmpresa.direccion, newEmpresa.telefono]);
+    const {
+      cif, nombre, localidad, comunidad, direccion, telefono,
+    } = req.body;
+    if (!cif || !nombre || !localidad || !comunidad || !direccion || !telefono) {
+      res.status(400).json({ error: 'Todos los campos son requeridos' });
+    }
 
-    return res.status(200).json(data);
+    await db.none('INSERT INTO TFG_empresa(cif, nombre, localidad, comunidad, direccion, telefono) VALUES($1, $2, $3, $4, $5, $6)', [cif, nombre, localidad, comunidad, direccion, telefono]);
+
+    res.status(201).json({ message: 'Empresa creada correctamente' });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json(`Your program fail correctly ${error}`);
+    res.status(500).json({ error: 'Error al crear la empresa' });
   }
 });
+
+router.delete('/:cif', async (req, res) => {
+  const { cif } = req.params;
+
+  try {
+    const exist = await db.oneOrNone('SELECT 1 FROM TFG_empresa WHERE cif = $1', cif);
+    if (!exist) {
+      res.status(404).json({ error: 'La empresa no existe' });
+    }
+
+    await db.none('DELETE FROM TFG_empresa WHERE cif = $1', cif);
+
+    res.status(200).json({ message: 'Empresa eliminada correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar la empresa' });
+  }
+});
+
 module.exports = router;
