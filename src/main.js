@@ -1,4 +1,5 @@
 const app = require('./app/app');
+
 require('dotenv').config();
 
 const { env } = process;

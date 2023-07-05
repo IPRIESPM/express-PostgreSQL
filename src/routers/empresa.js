@@ -1,9 +1,10 @@
 const express = require('express');
 const { db } = require('../database/connection');
+const { verifyToken } = require('../jwt/jwt');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   try {
     const data = await db.any('SELECT * FROM TFG_empresa');
     return res.status(200).json(data);
@@ -27,13 +28,29 @@ router.get('/:cif', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.get('/version/:version', async (req, res) => {
+  try {
+    const { version } = req.params;
+    if (!version) return res.status(400).json({ error: 'La versión es requerida' });
+
+    const data = await db.any('SELECT * FROM TFG_empresa_version WHERE version = $1', version);
+
+    if (data) return res.status(200).json({ status: true, data });
+
+    return res.status(404).json({ error: 'La versión no existe' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error al obtener la versión' });
+  }
+});
+
+router.post('/', verifyToken, async (req, res) => {
   try {
     const {
       cif, nombre, localidad, comunidad, direccion, telefono,
     } = req.body;
 
     if (!cif || !nombre || !localidad || !comunidad || !direccion || !telefono) {
+      console.log('error en los campos');
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
 
@@ -41,6 +58,7 @@ router.post('/', async (req, res) => {
 
     return res.status(201).json({ message: 'Empresa creada correctamente' });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: 'Error al crear la empresa' });
   }
 });

@@ -1,11 +1,11 @@
 const jws = require('jsonwebtoken');
 require('dotenv').config();
 
-function generateToken(dni,nombre,telefono) {
-  const payload = {dni,nombre,telefono};
+function generateToken(dni, nombre, telefono) {
+  const payload = { dni, nombre, telefono };
   const options = { expiresIn: '6d' };
 
-  // fimra el token con el secret que tenemos en el .env
+  // firma el token con el secret que tenemos en el .env
   // y le damos un tiempo de expiración de 6 días
   const token = jws.sign(payload, process.env.JWT_SECRET, options);
   return token;
