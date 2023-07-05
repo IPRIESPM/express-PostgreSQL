@@ -20,7 +20,7 @@ create table TFG_empresa(
     telefono integer
 );
 
-INSERT INTO TFG_versiones (tabla, version_n)
+INSERT INTO TFG_versiones (tabla)
 VALUES ('tfg_empresa');
 
 CREATE TRIGGER trigger_actualizar_version
@@ -40,7 +40,7 @@ create table TFG_contactos(
     funciones varchar(100)
 );
 
-INSERT INTO TFG_contactos (tabla, version_n)
+INSERT INTO TFG_contactos (tabla)
 VALUES ('tfg_contactos');
 
 CREATE TRIGGER trigger_actualizar_version
@@ -63,7 +63,7 @@ create table TFG_puestos(
     ciclo varchar(50) check (ciclo in ('FPB','SMR','DAM','DAW','ASIR'))
 );
 
-INSERT INTO TFG_puestos (tabla, version_n)
+INSERT INTO TFG_puestos (tabla)
 VALUES ('tfg_puestos');
 
 CREATE TRIGGER trigger_actualizar_version
@@ -78,7 +78,7 @@ create table TFG_profesores(
     contrasena VARCHAR(255)
 );
 
-INSERT INTO TFG_profesores (tabla, version_n)
+INSERT INTO TFG_profesores (tabla)
 VALUES ('tfg_profesores');
 
 CREATE TRIGGER trigger_actualizar_version
@@ -97,7 +97,7 @@ create table TFG_anotaciones(
     primary key (contacto_n,profesor_dni,anyo)
 );
 
-INSERT INTO TFG_anotaciones (tabla, version_n)
+INSERT INTO TFG_anotaciones (tabla)
 VALUES ('tfg_anotaciones');
 
 CREATE TRIGGER trigger_actualizar_version
