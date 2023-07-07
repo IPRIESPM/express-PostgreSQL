@@ -1,14 +1,28 @@
 const express = require('express');
 const { db } = require('../database/connection');
 const { verifyToken } = require('../jwt/jwt');
+const verifyVersion = require('../controller/version');
 
 const router = express.Router();
 
-router.get('/', verifyToken, async (req, res) => {
+const query = `SELECT *
+FROM TFG_empresa
+ORDER BY modificado DESC
+LIMIT 20;
+`;
+router.get('/', verifyToken, verifyVersion, async (req, res) => {
   try {
-    const data = await db.any('SELECT * FROM TFG_empresa');
-    return res.status(200).json(data);
+    const data = await db.any(query);
+    const { versionData } = req;
+
+    const response = {
+      datos: data,
+      version: versionData,
+    };
+    console.log(response);
+    return res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     return res.status(501).json({ status: error });
   }
 });
@@ -56,7 +70,9 @@ router.post('/', verifyToken, async (req, res) => {
 
     await db.none('INSERT INTO TFG_empresa(cif, nombre, localidad, comunidad, direccion, telefono) VALUES($1, $2, $3, $4, $5, $6)', [cif, nombre, localidad, comunidad, direccion, telefono]);
 
-    return res.status(201).json({ message: 'Empresa creada correctamente' });
+    return res.status(201).json({
+      cif, nombre, localidad, comunidad, direccion, telefono,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: 'Error al crear la empresa' });
