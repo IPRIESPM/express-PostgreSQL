@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
     // generamos el token de autenticación
     const token = generateToken(dni, nombre, telefono);
 
-    return res.status(200).json({ token, user: { nombre, telefono } });
+    return res.status(200).json({ token, user: { nombre, telefono, dni } });
   } catch (error) {
     console.log(error);
     return res.status(401).json({ status: 'authentication error' });

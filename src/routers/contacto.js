@@ -1,12 +1,22 @@
 const express = require('express');
 const { db } = require('../database/connection');
+const { verifyToken } = require('../jwt/jwt');
+const verifyVersion = require('../controller/version');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', verifyVersion, verifyToken, async (req, res) => {
   try {
     const data = await db.any('SELECT * FROM TFG_contactos');
-    return res.status(200).json(data);
+
+    const { versionData } = req;
+
+    const response = {
+      data,
+      version: versionData,
+    };
+    console.log(response);
+    return res.status(200).json(response);
   } catch (error) {
     return res.status(501).json({ status: error });
   }
