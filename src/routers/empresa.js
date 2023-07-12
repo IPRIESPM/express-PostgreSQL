@@ -5,20 +5,13 @@ const verifyVersion = require('../controller/version');
 
 const router = express.Router();
 
-// const query = `SELECT *
-// FROM TFG_empresa
-// ORDER BY modificado DESC
-// LIMIT 20;
-// `;
-
-const query = `SELECT e.cif , e.nombre , e.localidad, e.comunidad, e.direccion, e.telefono,
-c.n AS numero_contacto, c.nombre AS nombre_contacto,
-p.cod AS codigo_puesto, p.descrip AS puesto, p.vacantes
-FROM TFG_empresa e
-LEFT JOIN TFG_contacto_empresa ce ON e.cif = ce.cif_empre
-LEFT JOIN TFG_contactos c ON ce.contacto_n = c.n
-LEFT JOIN TFG_puestos p ON e.cif = p.cif_empresa;`;
 router.get('/', verifyToken, verifyVersion, async (req, res) => {
+  const query = `SELECT e.cif, e.nombre AS nombre, pr.nombre AS nombre_profesor, pr.dni as         
+    dni_profesor, e.localidad, p.vacantes, p.ciclo
+    FROM tfg_empresa e
+  LEFT JOIN tfg_puestos p ON e.cif = p.cif_empresa
+  LEFT JOIN tfg_profesores pr ON e.profesor_encargado = pr.dni;`;
+
   try {
     const data = await db.any(query);
     const { versionData } = req;
@@ -35,16 +28,49 @@ router.get('/', verifyToken, verifyVersion, async (req, res) => {
   }
 });
 
-router.get('/:cif', async (req, res) => {
+router.get('/:cif', verifyToken, async (req, res) => {
+  const queryEmpresa = `SELECT
+    e.*,
+    pr.nombre AS nombre_profesor,
+    pr.dni AS dni_profesor
+  FROM tfg_empresa e
+  LEFT JOIN tfg_profesores pr ON e.profesor_encargado = pr.dni
+  WHERE e.cif = $1`;
+  const queryContactos = `SELECT c.*
+    FROM tfg_contactos c
+    JOIN tfg_contacto_empresa ce ON c.n = ce.contacto_n
+    JOIN tfg_empresa e ON ce.cif_empre = e.cif
+    WHERE e.cif = $1;
+  `;
+
+  const queryPuestos = `SELECT p.*
+    FROM tfg_puestos p
+    JOIN tfg_empresa e ON p.cif_empresa = e.cif
+    WHERE e.cif = $1;
+  `;
   try {
+    let dataMensaje = '';
+    console.log(req.params);
     const { cif } = req.params;
     if (!cif) return res.status(400).json({ error: 'El CIF es requerido' });
 
-    const data = await db.oneOrNone('SELECT * FROM TFG_empresa WHERE cif = $1', cif);
+    const dataEmpresa = await db.oneOrNone(queryEmpresa, cif);
+    const dataContactos = await db.oneOrNone(queryContactos, cif);
+    const dataPuestos = await db.oneOrNone(queryPuestos, cif);
 
-    if (data) return res.status(200).json({ status: true, data });
+    const data = {
+      empresa: dataEmpresa,
+      contactos: dataContactos,
+      puestos: dataPuestos,
+    };
 
-    return res.status(404).json({ error: 'La empresa no existe' });
+    if (dataEmpresa) return res.status(200).json(data);
+
+    if (!dataEmpresa) dataMensaje = 'La empresa no existe';
+    if (!dataContactos) dataMensaje = 'La empresa no tiene contactos';
+    if (!dataPuestos) dataMensaje = 'La empresa no tiene puestos';
+
+    return res.status(500).json({ error: dataMensaje });
   } catch (error) {
     return res.status(500).json({ error: 'Error al obtener la empresa' });
   }
@@ -68,15 +94,15 @@ router.get('/version/:version', async (req, res) => {
 router.post('/', verifyToken, async (req, res) => {
   try {
     const {
-      cif, nombre, localidad, comunidad, direccion, telefono,
+      cif, nombre, localidad, comunidad, direccion, telefono, profesor,
     } = req.body;
-
-    if (!cif || !nombre || !localidad || !comunidad || !direccion || !telefono) {
+    console.log(req.body);
+    if (!cif || !nombre || !localidad || !comunidad || !direccion || !telefono || !profesor) {
       console.log('error en los campos');
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
 
-    await db.none('INSERT INTO TFG_empresa(cif, nombre, localidad, comunidad, direccion, telefono) VALUES($1, $2, $3, $4, $5, $6)', [cif, nombre, localidad, comunidad, direccion, telefono]);
+    await db.none('INSERT INTO TFG_empresa(cif, nombre, localidad, comunidad, direccion, telefono, profesor_encargado ) VALUES($1, $2, $3, $4, $5, $6, $7)', [cif, nombre, localidad, comunidad, direccion, telefono, profesor]);
 
     return res.status(201).json({
       cif, nombre, localidad, comunidad, direccion, telefono,

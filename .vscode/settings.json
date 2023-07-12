@@ -4,7 +4,10 @@
     "anyo",
     "contrasena",
     "conversacion",
+    "descrip",
     "direccion",
+    "fkey",
+    "pkey",
     "plpgsql",
     "telefono"
   ]
