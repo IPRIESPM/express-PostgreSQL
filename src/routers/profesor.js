@@ -76,16 +76,23 @@ router.delete('/:dni', verifyToken, async (req, res) => {
   }
 });
 
-router.put('/:dni', verifyToken, async (req, res) => {
+router.put('/:dni', encriptarPassword, verifyToken, async (req, res) => {
   const {
-    dni, nombre, telefono, email, correo,
+    dni, nombre, telefono, email, correo, contrasena,
   } = req.body;
 
   try {
+    if (!dni || !nombre || !telefono || !correo) {
+      return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    }
     const exist = await db.oneOrNone('SELECT 1 FROM TFG_profesores WHERE dni = $1', dni);
     if (!exist) return res.status(404).json({ error: 'El docente no existe' });
 
-    await db.none('UPDATE TFG_profesores SET dni = $1, nombre = $2, telefono = $3, correo = $4 WHERE dni = $1', [dni, nombre, telefono, correo]);
+    if (contrasena) {
+      await db.none('UPDATE TFG_profesores SET dni = $1, nombre = $2, telefono = $3, correo = $4, contrasena = $5 WHERE dni = $1', [dni, nombre, telefono, correo, contrasena]);
+    } else {
+      await db.none('UPDATE TFG_profesores SET dni = $1, nombre = $2, telefono = $3, correo = $4 WHERE dni = $1', [dni, nombre, telefono, correo]);
+    }
 
     return res.status(200).json({
       dni, nombre, telefono, email, correo,

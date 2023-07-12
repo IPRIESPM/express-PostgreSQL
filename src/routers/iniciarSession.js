@@ -17,7 +17,12 @@ router.post('/', async (req, res) => {
       return res.status(401).json({ status: 'authentication error' });
     }
 
-    const { nombre, telefono } = data[0];
+    const {
+      nombre,
+      telefono,
+      correo,
+      admin,
+    } = data[0];
 
     // comprobamos que la contraseña es correcta
     const result = await comprobarPassword(contrasena, data[0].contrasena);
@@ -29,7 +34,12 @@ router.post('/', async (req, res) => {
     // generamos el token de autenticación
     const token = generateToken(dni, nombre, telefono);
 
-    return res.status(200).json({ token, user: { nombre, telefono, dni } });
+    return res.status(200).json({
+      token,
+      user: {
+        nombre, telefono, dni, correo, admin,
+      },
+    });
   } catch (error) {
     console.log(error);
     return res.status(401).json({ status: 'authentication error' });

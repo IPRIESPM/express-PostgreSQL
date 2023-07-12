@@ -31,7 +31,7 @@ EXECUTE PROCEDURE actualizar_version();
 
 
 create table TFG_contactos(
-    n integer primary key,
+    n integer primary key GENERATED ALWAYS AS IDENTITY,
     nombre varchar(100),
     correo varchar(100),
     telefono integer,

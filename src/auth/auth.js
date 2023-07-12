@@ -4,7 +4,10 @@ const bcrypt = require('bcrypt');
 async function encriptarPassword(req, res, next) {
   try {
     const { contrasena } = req.body;
-    if (!contrasena) return res.status(400).json({ status: 'Bad request' });
+
+    if (!contrasena) return next();
+
+    console.log('se ha encontrado una contraseña');
     const salt = bcrypt.genSaltSync(10);
     const haltedPassword = await bcrypt.hashSync(contrasena, salt);
     req.body.contrasena = haltedPassword;
