@@ -86,6 +86,9 @@ router.delete('/:n', async (req, res) => {
   const { n } = req.params;
 
   try {
+    await db.oneOrNone(`DELETE FROM TFG_contacto_empresa
+    WHERE contacto_n = $1;`, n);
+
     const exist = await db.oneOrNone('SELECT 1 FROM TFG_contactos WHERE n = $1', n);
     if (!exist) {
       res.status(404).json({ error: 'La empresa no existe' });
