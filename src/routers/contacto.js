@@ -113,7 +113,7 @@ router.put('/', async (req, res) => {
     if (principal === 'true') principal = !!'true';
     const query = `
     UPDATE TFG_contactos
-    SET nombre = $1, correo = $2, telefono = $3, dni = $4, tipo = $5, principal = $6, funciones = $7
+    SET nombre = $2, correo = $3, telefono = $4, dni = $1, tipo = $5, principal = $6, funciones = $7
     WHERE n = 12;`;
 
     await db.none(query, [dni, nombre, correo, telefono, tipo, principal, funciones]);
@@ -123,7 +123,7 @@ router.put('/', async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: 'Error al crear el contacto' });
+    return res.status(500).json({ error: 'Error al editar el contacto' });
   }
 });
 module.exports = router;
