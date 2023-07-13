@@ -116,7 +116,7 @@ router.put('/', async (req, res) => {
     SET  dni = $1, nombre = $2, correo = $3, telefono = $4, tipo = $5, principal = $6, funciones = $7
     WHERE n = $8;`;
 
-    await db.none(query, [dni, nombre, correo, telefono, tipo, principal, funciones]);
+    await db.none(query, [dni, nombre, correo, telefono, tipo, principal, funciones, n]);
 
     return res.status(201).json({
       dni, nombre, correo, telefono, tipo, empresa, funciones, n,
