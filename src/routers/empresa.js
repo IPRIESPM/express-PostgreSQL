@@ -55,9 +55,9 @@ router.get('/:cif', verifyToken, async (req, res) => {
 
     const dataEmpresa = await db.oneOrNone(queryEmpresa, cif);
     console.log(dataEmpresa);
-    const dataContactos = await db.oneOrNone(queryContactos, cif);
+    const dataContactos = await db.any(queryContactos, cif);
     console.log(dataContactos);
-    const dataPuestos = await db.oneOrNone(queryPuestos, cif);
+    const dataPuestos = await db.one(queryPuestos, cif);
     console.log(dataPuestos);
 
     const data = {
