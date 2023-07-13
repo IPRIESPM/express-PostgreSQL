@@ -104,10 +104,10 @@ router.put('/', async (req, res) => {
   try {
     let { principal } = req.body;
     const {
-      dni, nombre, correo, telefono, tipo, empresa, funciones,
+      n, dni, nombre, correo, telefono, tipo, empresa, funciones,
     } = req.body;
     console.log(req.body);
-    if (!empresa || !dni) {
+    if (!empresa || !n) {
       return res.status(400).json({ error: 'dni y empresa son requeridos' });
     }
     if (principal === 'true') principal = !!'true';
