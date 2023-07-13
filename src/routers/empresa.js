@@ -54,8 +54,11 @@ router.get('/:cif', verifyToken, async (req, res) => {
     if (!cif) return res.status(400).json({ error: 'El CIF es requerido' });
 
     const dataEmpresa = await db.oneOrNone(queryEmpresa, cif);
+    console.log(dataEmpresa);
     const dataContactos = await db.oneOrNone(queryContactos, cif);
+    console.log(dataContactos);
     const dataPuestos = await db.oneOrNone(queryPuestos, cif);
+    console.log(dataPuestos);
 
     const data = {
       empresa: dataEmpresa,
