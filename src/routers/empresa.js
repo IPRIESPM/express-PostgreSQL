@@ -129,7 +129,7 @@ router.delete('/:cif', verifyToken, async (req, res) => {
 router.put('/:cif', verifyToken, async (req, res) => {
   const { cif: cifTest } = req.params;
   const {
-    cif, nombre, localidad, comunidad, direccion, telefono, profesor
+    cif, nombre, localidad, comunidad, direccion, telefono, profesor,
   } = req.body;
   console.log('put');
   console.log(req.body);
@@ -141,7 +141,7 @@ router.put('/:cif', verifyToken, async (req, res) => {
     await db.none('UPDATE TFG_empresa SET nombre = $1, localidad = $2, comunidad = $3, direccion = $4, telefono = $5 , profesor_encargado = $7 WHERE cif = $6', [nombre, localidad, comunidad, direccion, telefono, cif, profesor]);
 
     return res.status(200).json({
-      cif, nombre, localidad, comunidad, direccion, telefono, profesor
+      cif, nombre, localidad, comunidad, direccion, telefono, profesor,
     });
   } catch (error) {
     console.log(error);

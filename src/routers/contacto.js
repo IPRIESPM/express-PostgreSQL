@@ -52,6 +52,7 @@ router.get('/:cif', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     let { principal } = req.body;
+    console.log(req.body);
     const {
       dni, nombre, correo, telefono, tipo, empresa, funciones,
     } = req.body;

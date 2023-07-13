@@ -5,7 +5,7 @@ async function encriptarPassword(req, res, next) {
   try {
     const { contrasena } = req.body;
 
-    if (!contrasena) return res.status(501).json({ status: "No he encontrado ninguna contraseña" });
+    if (!contrasena) return res.status(501).json({ status: 'No he encontrado ninguna contraseña' });
     const salt = bcrypt.genSaltSync(10);
     const haltedPassword = await bcrypt.hashSync(contrasena, salt);
     req.body.contrasena = haltedPassword;
