@@ -38,8 +38,8 @@ router.get('/version/:version', async (req, res) => {
     return res.status(500).json({ error: 'Error al obtener la versión' });
   }
 });
-
-router.post('/', verifyToken, encriptarPassword, async (req, res) => {
+//Registro de usuarios
+router.post('/', encriptarPassword, async (req, res) => {
   try {
     const {
       dni, nombre, telefono, contrasena, correo,
@@ -78,26 +78,26 @@ router.delete('/:dni', verifyToken, async (req, res) => {
 
 router.put('/:dni', encriptarPassword, verifyToken, async (req, res) => {
   const {
-    dni, nombre, telefono, email, correo, contrasena,
+    dni, nombre, telefono, correo, contrasena,
   } = req.body;
 
   try {
-    if (!dni || !nombre || !telefono || !correo) {
+    if (!dni || !nombre || !telefono || !correo || !contrasena) {
+      console.log('error en los campos')
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
     const exist = await db.oneOrNone('SELECT 1 FROM TFG_profesores WHERE dni = $1', dni);
     if (!exist) return res.status(404).json({ error: 'El docente no existe' });
 
-    if (contrasena) {
-      await db.none('UPDATE TFG_profesores SET dni = $1, nombre = $2, telefono = $3, correo = $4, contrasena = $5 WHERE dni = $1', [dni, nombre, telefono, correo, contrasena]);
-    } else {
-      await db.none('UPDATE TFG_profesores SET dni = $1, nombre = $2, telefono = $3, correo = $4 WHERE dni = $1', [dni, nombre, telefono, correo]);
-    }
 
+    await db.none('UPDATE TFG_profesores SET  nombre = $2, telefono = $3, correo = $4, contrasena = $5 WHERE dni = $1', [dni, nombre, telefono, correo, contrasena]);
+
+    console.log(dni, nombre, telefono, correo, contrasena);
     return res.status(200).json({
-      dni, nombre, telefono, email, correo,
+      dni, nombre, telefono, correo, contrasena
     });
   } catch (error) {
+    console.log("error en el put");
     return res.status(500).json({ error: 'Error al modificar al docente' });
   }
 });

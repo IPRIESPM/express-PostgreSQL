@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
       nombre,
       telefono,
       correo,
-      admin,
+      tipo,
     } = data[0];
 
     // comprobamos que la contraseña es correcta
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
     return res.status(200).json({
       token,
       user: {
-        nombre, telefono, dni, correo, admin,
+        nombre, telefono, dni, correo, tipo,
       },
     });
   } catch (error) {

@@ -11,6 +11,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+create table TFG_profesores(
+    dni varchar(12) primary key,
+    nombre varchar(100),
+    telefono integer,
+    correo varchar(100),
+    contrasena VARCHAR(255),
+    tipo varchar(10) check (tipo in ('admin','user')) default 'user',
+    modificado timestamp DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO TFG_versiones (tabla)
+VALUES ('tfg_profesores');
+
 create table TFG_empresa(
     cif varchar(12) primary key,
     nombre varchar(60),
@@ -18,7 +31,8 @@ create table TFG_empresa(
     comunidad varchar(50),
     direccion varchar(100),
     telefono integer,
-    modificado timestamp DEFAULT CURRENT_TIMESTAMP
+    modificado timestamp DEFAULT CURRENT_TIMESTAMP,
+    profesor_encargado varchar(12) references TFG_profesores
 );
 
 INSERT INTO TFG_versiones (tabla)
@@ -62,7 +76,7 @@ create table TFG_puestos(
     vacantes integer,
     descrip varchar(200),
     horario varchar(100),
-    ciclo varchar(50) check (ciclo in ('FPB','SMR','DAM','DAW','ASIR')),
+    ciclo varchar(50) check (ciclo in ('FPB','SMR','DAM','DAW','ASIR','IMSA')),
     modificado timestamp DEFAULT CURRENT_TIMESTAMP,
     cif_empresa varchar(12) REFERENCES TFG_empresa(cif)
 );
@@ -75,17 +89,7 @@ AFTER INSERT OR UPDATE OR DELETE ON TFG_puestos
 FOR EACH ROW
 EXECUTE PROCEDURE actualizar_version();
 
-create table TFG_profesores(
-    dni varchar(12) primary key,
-    nombre varchar(100),
-    telefono integer,
-    correo varchar(100),
-    contrasena VARCHAR(255),
-    modificado timestamp DEFAULT CURRENT_TIMESTAMP
-);
 
-INSERT INTO TFG_versiones (tabla)
-VALUES ('tfg_profesores');
 
 CREATE TRIGGER trigger_actualizar_version_profesores
 AFTER INSERT OR UPDATE OR DELETE ON TFG_profesores
@@ -93,15 +97,15 @@ FOR EACH ROW
 EXECUTE PROCEDURE actualizar_version();
 
 create table TFG_anotaciones(
+    codigo integer primary key,
     contacto_n integer references TFG_contactos(n),
     profesor_dni varchar(12) references TFG_profesores(dni),
     anyo integer,
     fecha date,
     tipo varchar(20) check (tipo in ('Teléfono','Correo','Persona')),
     confirmado boolean,
-    conversacion varchar(255),
+    anotacion varchar(255),
     modificado timestamp DEFAULT CURRENT_TIMESTAMP,
-    primary key (contacto_n,profesor_dni,anyo)
 );
 
 INSERT INTO TFG_versiones (tabla)

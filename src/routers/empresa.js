@@ -6,10 +6,9 @@ const verifyVersion = require('../controller/version');
 const router = express.Router();
 
 router.get('/', verifyToken, verifyVersion, async (req, res) => {
-  const query = `SELECT e.cif, e.nombre AS nombre, pr.nombre AS nombre_profesor, pr.dni as         
-    dni_profesor, e.localidad, p.vacantes, p.ciclo
+  const query = `SELECT e.cif, e.nombre AS nombre, pr.nombre AS nombre_profesor, pr.dni as   
+    dni_profesor, e.telefono, e.direccion, e.comunidad , e.localidad
     FROM tfg_empresa e
-  LEFT JOIN tfg_puestos p ON e.cif = p.cif_empresa
   LEFT JOIN tfg_profesores pr ON e.profesor_encargado = pr.dni;`;
 
   try {
@@ -130,7 +129,7 @@ router.delete('/:cif', verifyToken, async (req, res) => {
 router.put('/:cif', verifyToken, async (req, res) => {
   const { cif: cifTest } = req.params;
   const {
-    cif, nombre, localidad, comunidad, direccion, telefono,
+    cif, nombre, localidad, comunidad, direccion, telefono, profesor
   } = req.body;
   console.log('put');
   console.log(req.body);
@@ -139,12 +138,13 @@ router.put('/:cif', verifyToken, async (req, res) => {
     const exist = await db.oneOrNone('SELECT 1 FROM TFG_empresa WHERE cif = $1', cif);
     if (!exist) return res.status(404).json({ error: 'La empresa no existe' });
 
-    await db.none('UPDATE TFG_empresa SET nombre = $1, localidad = $2, comunidad = $3, direccion = $4, telefono = $5 WHERE cif = $6', [nombre, localidad, comunidad, direccion, telefono, cif]);
+    await db.none('UPDATE TFG_empresa SET nombre = $1, localidad = $2, comunidad = $3, direccion = $4, telefono = $5 , profesor_encargado = $7 WHERE cif = $6', [nombre, localidad, comunidad, direccion, telefono, cif, profesor]);
 
     return res.status(200).json({
-      cif, nombre, localidad, comunidad, direccion, telefono,
+      cif, nombre, localidad, comunidad, direccion, telefono, profesor
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: 'Error al actualizar la empresa' });
   }
 });
