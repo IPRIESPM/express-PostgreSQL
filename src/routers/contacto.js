@@ -113,13 +113,13 @@ router.put('/', async (req, res) => {
     if (principal === 'true') principal = !!'true';
     const query = `
     UPDATE TFG_contactos
-    SET nombre = $2, correo = $3, telefono = $4, dni = $1, tipo = $5, principal = $6, funciones = $7
-    WHERE n = 12;`;
+    SET  dni = $1, nombre = $2, correo = $3, telefono = $4, tipo = $5, principal = $6, funciones = $7
+    WHERE n = $8;`;
 
     await db.none(query, [dni, nombre, correo, telefono, tipo, principal, funciones]);
 
     return res.status(201).json({
-      dni, nombre, correo, telefono, tipo, empresa, funciones,
+      dni, nombre, correo, telefono, tipo, empresa, funciones, n,
     });
   } catch (error) {
     console.log(error);
