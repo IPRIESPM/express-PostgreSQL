@@ -68,8 +68,6 @@ router.get('/:cif', verifyToken, async (req, res) => {
     if (!dataEmpresa) dataMensaje = 'La empresa no existe';
     if (!dataContactos) dataMensaje = 'La empresa no tiene contactos';
     if (!dataPuestos) dataMensaje = 'La empresa no tiene puestos';
-
-    return res.status(500).json({ error: dataMensaje });
   } catch (error) {
     return res.status(500).json({ error: 'Error al obtener la empresa' });
   }
