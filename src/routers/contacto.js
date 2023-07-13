@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/:cif', async (req, res) => {
+router.get('/empresa/:cif', async (req, res) => {
   try {
     const { cif } = req.params;
     if (!cif) return res.status(400).json({ error: 'El cif es requerido' });
@@ -52,12 +52,11 @@ router.get('/:cif', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     let { principal } = req.body;
-    console.log(req.body);
     const {
       dni, nombre, correo, telefono, tipo, empresa, funciones,
     } = req.body;
     console.log(req.body);
-    if (!dni || !nombre || !correo || !telefono || !tipo || !empresa) {
+    if (!dni || !nombre || !correo || !telefono || !tipo || !empresa || !funciones) {
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
     if (principal === 'true') principal = !!'true';
