@@ -100,4 +100,30 @@ router.delete('/:n', async (req, res) => {
   }
 });
 
+router.put('/', async (req, res) => {
+  try {
+    let { principal } = req.body;
+    const {
+      dni, nombre, correo, telefono, tipo, empresa, funciones,
+    } = req.body;
+    console.log(req.body);
+    if (!empresa || !dni) {
+      return res.status(400).json({ error: 'dni y empresa son requeridos' });
+    }
+    if (principal === 'true') principal = !!'true';
+    const query = `
+    UPDATE TFG_contactos
+    SET nombre = $1, correo = $2, telefono = $3, dni = $4, tipo = $5, principal = $6, funciones = $7
+    WHERE n = 12;`;
+
+    await db.none(query, [dni, nombre, correo, telefono, tipo, principal, funciones]);
+
+    return res.status(201).json({
+      dni, nombre, correo, telefono, tipo, empresa, funciones,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: 'Error al crear el contacto' });
+  }
+});
 module.exports = router;

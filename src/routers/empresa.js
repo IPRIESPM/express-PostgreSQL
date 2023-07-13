@@ -48,7 +48,6 @@ router.get('/:cif', verifyToken, async (req, res) => {
     WHERE e.cif = $1;
   `;
   try {
-    let dataMensaje = '';
     console.log(req.params);
     const { cif } = req.params;
     if (!cif) return res.status(400).json({ error: 'El CIF es requerido' });
@@ -67,10 +66,7 @@ router.get('/:cif', verifyToken, async (req, res) => {
     };
 
     if (dataEmpresa) return res.status(200).json(data);
-
-    if (!dataEmpresa) dataMensaje = 'La empresa no existe';
-    if (!dataContactos) dataMensaje = 'La empresa no tiene contactos';
-    if (!dataPuestos) dataMensaje = 'La empresa no tiene puestos';
+    return res.status(404).json({ error: 'La empresa no existe' });
   } catch (error) {
     return res.status(500).json({ error: 'Error al obtener la empresa' });
   }
