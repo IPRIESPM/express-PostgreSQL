@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
     const {
       cod, anyo, vacantes, descrip, horario, ciclo,
     } = req.body;
-    if (!cod || !anyo || !vacantes || !descrip || !horario || !ciclo) return res.status(400).json({ status: 'Bad request' });
+    if (!cod || !anyo || !vacantes || !horario || !ciclo) return res.status(400).json({ status: 'Faltan campos obligatorios' });
 
     const codParsed = parseInt(cod, 10);
 
