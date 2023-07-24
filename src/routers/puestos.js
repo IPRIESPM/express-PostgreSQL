@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
     const codParsed = parseInt(cod, 10);
 
-    if (codParsed < 0) return res.status(400).json({ status: 'Bad request' });
+    if (codParsed < 0) return res.status(400).json({ status: 'No existe la empresa seleccionada' });
 
     const data = await db.any('INSERT INTO TFG_puestos (cod,anyo, vacantes, descrip,horario,ciclo) VALUES ($1, $2, $3) RETURNING *', [codParsed, anyo, vacantes, descrip, horario, ciclo]);
     return res.status(200).json(data);
