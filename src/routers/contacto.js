@@ -56,8 +56,8 @@ router.post('/', async (req, res) => {
       dni, nombre, correo, telefono, tipo, empresa, funciones,
     } = req.body;
     console.log(req.body);
-    if (!dni || !nombre || !correo || !telefono || !tipo || !empresa || !funciones) {
-      return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    if (!empresa) {
+      return res.status(400).json({ error: 'dni y empresa son requeridos' });
     }
     if (principal === 'true') principal = !!'true';
 
@@ -86,6 +86,9 @@ router.delete('/:n', async (req, res) => {
   const { n } = req.params;
 
   try {
+    await db.oneOrNone(`DELETE FROM TFG_contacto_empresa
+    WHERE contacto_n = $1;`, n);
+
     const exist = await db.oneOrNone('SELECT 1 FROM TFG_contactos WHERE n = $1', n);
     if (!exist) {
       res.status(404).json({ error: 'La empresa no existe' });
@@ -100,4 +103,30 @@ router.delete('/:n', async (req, res) => {
   }
 });
 
+router.put('/', async (req, res) => {
+  try {
+    let { principal } = req.body;
+    const {
+      n, dni, nombre, correo, telefono, tipo, empresa, funciones,
+    } = req.body;
+    console.log(req.body);
+    if (!empresa || !n) {
+      return res.status(400).json({ error: 'dni y empresa son requeridos' });
+    }
+    if (principal === 'true') principal = !!'true';
+    const query = `
+    UPDATE TFG_contactos
+    SET  dni = $1, nombre = $2, correo = $3, telefono = $4, tipo = $5, principal = $6, funciones = $7
+    WHERE n = $8;`;
+
+    await db.none(query, [dni, nombre, correo, telefono, tipo, principal, funciones, n]);
+
+    return res.status(201).json({
+      dni, nombre, correo, telefono, tipo, empresa, funciones, n,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: 'Error al editar el contacto' });
+  }
+});
 module.exports = router;
