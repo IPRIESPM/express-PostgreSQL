@@ -71,7 +71,7 @@ create table TFG_contacto_empresa(
 );
 
 create table TFG_puestos(
-    cod integer primary key,
+    cod integer primary key GENERATED ALWAYS AS IDENTITY,
     anyo integer,
     vacantes integer,
     descrip varchar(200),
