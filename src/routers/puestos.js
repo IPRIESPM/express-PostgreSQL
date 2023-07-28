@@ -48,7 +48,7 @@ router.put('/', verifyToken, async (req, res) => {
     const {
       cod, anyo, vacantes, descrip, horario, ciclo,
     } = req.body;
-    if (!cod || !anyo || !vacantes || !descrip || !horario || !ciclo) return res.status(400).json({ status: 'Faltan datos necesarios' });
+    if (!cod || !anyo || !vacantes || !horario || !ciclo) return res.status(400).json({ status: 'Faltan datos necesarios' });
 
     const data = await db.any('UPDATE TFG_puestos SET anyo = $1, vacantes = $2, descrip = $3, horario = $4, ciclo = $5 WHERE cod = $6 RETURNING *', [anyo, vacantes, descrip, horario, ciclo, cod]);
     return res.status(200).json(data);
