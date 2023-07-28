@@ -38,7 +38,7 @@ router.post('/', verifyToken, async (req, res) => {
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
-    return res.status(501).json({ status: 'Error al crear el contacto ' });
+    return res.status(501).json({ status: 'Error al crear el puesto ' });
   }
 });
 
@@ -49,13 +49,10 @@ router.put('/', verifyToken, async (req, res) => {
     } = req.body;
     if (!cod || !anyo || !vacantes || !descrip || !horario || !ciclo) return res.status(400).json({ status: 'Bad request' });
 
-    const codParsed = parseInt(cod, 10);
-    if (codParsed < 0) return res.status(400).json({ status: 'Bad request' });
-
-    const data = await db.any('UPDATE TFG_puestos SET anyo = $1, vacantes = $2, descrip = $3, horario = $4, ciclo = $5 WHERE cod = $6 RETURNING *', [anyo, vacantes, descrip, horario, ciclo, codParsed]);
+    const data = await db.any('UPDATE TFG_puestos SET anyo = $1, vacantes = $2, descrip = $3, horario = $4, ciclo = $5 WHERE cod = $6 RETURNING *', [anyo, vacantes, descrip, horario, ciclo, cod]);
     return res.status(200).json(data);
   } catch (error) {
-    return res.status(501).json({ status: error });
+    return res.status(501).json({ status: 'Error al modificar el puesto' });
   }
 });
 
