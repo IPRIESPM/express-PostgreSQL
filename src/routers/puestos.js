@@ -44,6 +44,7 @@ router.post('/', verifyToken, async (req, res) => {
 
 router.put('/', verifyToken, async (req, res) => {
   try {
+    console.log('Puesto recibido', req.body);
     const {
       cod, anyo, vacantes, descrip, horario, ciclo,
     } = req.body;
