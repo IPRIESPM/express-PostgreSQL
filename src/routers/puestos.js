@@ -32,6 +32,7 @@ router.post('/', verifyToken, async (req, res) => {
     const {
       anyo, vacantes, descrip, horario, ciclo, cifEmpresa,
     } = req.body;
+    console.log(req.body);
     if (!anyo || !vacantes || !horario || !ciclo || !cifEmpresa) return res.status(400).json({ status: 'Faltan campos obligatorios' });
 
     const data = await db.any('INSERT INTO TFG_puestos (anyo, vacantes, descrip, horario, ciclo, cif_empresa) VALUES ($1, $2, $3, $4, $5, $6)', [anyo, vacantes, descrip, horario, ciclo, cifEmpresa]);
