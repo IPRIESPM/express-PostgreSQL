@@ -6,7 +6,7 @@ const verifyVersion = require('../controller/version');
 const router = express.Router();
 
 router.get('/', verifyToken, verifyVersion, async (req, res) => {
-  const query = `SELECT e.cif, e.nombre AS nombre, pr.nombre AS nombre_profesor, pr.dni as   
+  const query = `SELECT e.cif, e.nombre AS nombre, pr.nombre AS nombre_profesor, pr.dni as
     dni_profesor, e.telefono, e.direccion, e.comunidad , e.localidad
     FROM tfg_empresa e
   LEFT JOIN tfg_profesores pr ON e.profesor_encargado = pr.dni;`;
@@ -93,7 +93,7 @@ router.post('/', verifyToken, async (req, res) => {
       cif, nombre, localidad, comunidad, direccion, telefono, profesor,
     } = req.body;
     console.log(req.body);
-    if (!cif || !nombre || !localidad || !comunidad || !direccion || !telefono || !profesor) {
+    if (!cif || !nombre || !profesor) {
       console.log('error en los campos');
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }

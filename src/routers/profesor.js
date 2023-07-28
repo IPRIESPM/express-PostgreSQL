@@ -38,14 +38,14 @@ router.get('/version/:version', async (req, res) => {
     return res.status(500).json({ error: 'Error al obtener la versión' });
   }
 });
-// Registro de usuarios
+
 router.post('/', encriptarPassword, async (req, res) => {
   try {
     const {
       dni, nombre, telefono, contrasena, correo,
     } = req.body;
     console.log(req.body);
-    if (!dni || !nombre || !telefono || !contrasena || !correo) {
+    if (!dni || !nombre || !contrasena) {
       console.log('error en los campos');
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
