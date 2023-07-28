@@ -35,18 +35,15 @@ router.get('/:cif', verifyToken, async (req, res) => {
   FROM tfg_empresa e
   LEFT JOIN tfg_profesores pr ON e.profesor_encargado = pr.dni
   WHERE e.cif = $1`;
-  const queryContactos = `SELECT c.*
+
+  const queryContactos = `SELECT *
     FROM tfg_contactos c
     JOIN tfg_contacto_empresa ce ON c.n = ce.contacto_n
     JOIN tfg_empresa e ON ce.cif_empre = e.cif
     WHERE e.cif = $1;
   `;
 
-  const queryPuestos = `SELECT p.*
-    FROM tfg_puestos p
-    JOIN tfg_empresa e ON p.cif_empresa = e.cif
-    WHERE e.cif = $1;
-  `;
+  const queryPuestos = 'SELECT * FROM tfg_puestos WHERE cif_empresa = $1;';
   try {
     console.log(req.params);
     const { cif } = req.params;
