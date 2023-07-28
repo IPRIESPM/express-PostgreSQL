@@ -57,7 +57,7 @@ router.put('/', verifyToken, async (req, res) => {
   }
 });
 
-router.delete('/:cod', async (req, res) => {
+router.delete('/:cod', verifyToken, async (req, res) => {
   try {
     if (!req.params.cod) return res.status(400).json({ status: 'Bad request' });
 
