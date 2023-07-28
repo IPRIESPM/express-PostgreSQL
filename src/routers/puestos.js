@@ -1,5 +1,6 @@
 const express = require('express');
 const { db } = require('../database/connection');
+const { verifyToken } = require('../jwt/jwt');
 
 const router = express.Router();
 
@@ -26,7 +27,7 @@ router.get('/:cod', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   try {
     const {
       anyo, vacantes, descrip, horario, ciclo, cod,
@@ -41,7 +42,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:cod', async (req, res) => {
+router.put('/', verifyToken, async (req, res) => {
   try {
     const {
       cod, anyo, vacantes, descrip, horario, ciclo,
