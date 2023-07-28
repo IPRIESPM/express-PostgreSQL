@@ -43,7 +43,7 @@ router.get('/:cif', verifyToken, async (req, res) => {
     WHERE e.cif = $1;
   `;
 
-  const queryPuestos = 'SELECT * FROM tfg_puestos WHERE cif_empresa = $1;';
+  const queryPuestos = 'SELECT anyo, vacantes, ciclo, descrip FROM tfg_puestos WHERE cif_empresa = $1;';
   try {
     console.log(req.params);
     const { cif } = req.params;
