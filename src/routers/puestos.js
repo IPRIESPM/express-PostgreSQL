@@ -29,18 +29,15 @@ router.get('/:cod', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const {
-      cod, anyo, vacantes, descrip, horario, ciclo,
+      anyo, vacantes, descrip, horario, ciclo, cod,
     } = req.body;
     if (!cod || !anyo || !vacantes || !horario || !ciclo) return res.status(400).json({ status: 'Faltan campos obligatorios' });
 
-    const codParsed = parseInt(cod, 10);
-
-    if (codParsed < 0) return res.status(400).json({ status: 'No existe la empresa seleccionada' });
-
-    const data = await db.any('INSERT INTO TFG_puestos (cod,anyo, vacantes, descrip,horario,ciclo) VALUES ($1, $2, $3) RETURNING *', [codParsed, anyo, vacantes, descrip, horario, ciclo]);
+    const data = await db.any('INSERT INTO TFG_puestos (anyo, vacantes, descrip,horario,ciclo,cif_empresa) VALUES ($1, $2, $3, $4) RETURNING *', [anyo, vacantes, descrip, horario, ciclo, cod]);
     return res.status(200).json(data);
   } catch (error) {
-    return res.status(501).json({ status: error });
+    console.log(error);
+    return res.status(501).json({ status: 'Error al crear el contacto ' });
   }
 });
 
