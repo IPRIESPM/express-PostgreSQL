@@ -59,10 +59,11 @@ router.put('/', verifyToken, async (req, res) => {
 
 router.delete('/:cod', verifyToken, async (req, res) => {
   try {
-    if (!req.params.cod) return res.status(400).json({ status: 'Bad request' });
+    console.log('Puesto recibido', req.params);
+    if (!req.params.cod) return res.status(400).json({ status: 'Tienes que indicarme el puesto' });
 
     req.params.cod = parseInt(req.params.cod, 10);
-    if (req.params.cod < 0) return res.status(400).json({ status: 'Bad request' });
+    if (req.params.cod < 0) return res.status(400).json({ status: 'Tienes que darme un puesto válido' });
 
     const data = await db.any('DELETE FROM TFG_puestos WHERE cod = $1 RETURNING *', req.params.cod);
     return res.status(200).json(data);
