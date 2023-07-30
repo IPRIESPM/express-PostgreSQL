@@ -54,6 +54,7 @@ router.put('/', verifyToken, async (req, res) => {
     const data = await db.any('UPDATE TFG_puestos SET anyo = $1, vacantes = $2, descrip = $3, horario = $4, ciclo = $5 WHERE cod = $6 RETURNING *', [anyo, vacantes, descrip, horario, ciclo, cod]);
     return res.status(200).json(data);
   } catch (error) {
+    console.log(error);
     return res.status(501).json({ status: 'Error al modificar el puesto' });
   }
 });
