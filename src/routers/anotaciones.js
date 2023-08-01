@@ -3,12 +3,12 @@ const { db } = require('../database/connection');
 
 const router = express.Router();
 
-router.get('/:contacto/', async (req, res) => {
+router.get('/:contact/', async (req, res) => {
   try {
-    const { contacto } = req.params;
-    if (!contacto) return res.status(400).json({ status: 'Tienes que indicar el contacto' });
+    const { contact } = req.params;
+    if (!contact) return res.status(400).json({ status: 'Tienes que indicar el contacto' });
 
-    const data = await db.any('SELECT * FROM TFG_anotaciones WHERE contacto_n = $1', [contacto]);
+    const data = await db.any('SELECT * FROM TFG_anotaciones WHERE contacto_n = $1', [contact]);
     return res.status(200).json(data);
   } catch (error) {
     return res.status(501).json({ status: 'Error al obtener las anotaciones' });
