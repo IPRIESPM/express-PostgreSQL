@@ -49,12 +49,12 @@ router.put('/:contacto/:dni', async (req, res) => {
   }
 });
 
-router.delete('/:contact/', verifyToken, async (req, res) => {
+router.delete('/:cod/', verifyToken, async (req, res) => {
   try {
-    const { contact } = req.params;
-    if (!contact) return res.status(400).json({ status: 'Faltan datos' });
+    const { cod } = req.params;
+    if (!cod) return res.status(400).json({ status: 'Faltan datos' });
 
-    const data = await db.any('DELETE FROM TFG_anotaciones WHERE contacto_n = $1 RETURNING *', [contact]);
+    const data = await db.any('DELETE FROM TFG_anotaciones WHERE codigo = $1 RETURNING *', [cod]);
     return res.status(200).json({ status: data });
   } catch (error) {
     return res.status(501).json({ status: 'Error al eliminar la anotación' });
