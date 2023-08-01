@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
     if (data) return res.status(200).json({ status: true, data });
     return res.status(404).json({ error: 'El contacto no existe' });
   } catch (error) {
-    return res.status(500).json({ error: 'Error al obtener el contacto' });
+    return res.status(501).json({ error: 'Error al obtener el contacto' });
   }
 });
 
