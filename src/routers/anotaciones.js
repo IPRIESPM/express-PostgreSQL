@@ -20,6 +20,8 @@ router.post('', async (req, res) => {
     const {
       anyo, fecha, tipo, anotacion, confirmado, profesorDni, contactoN,
     } = req.body;
+
+    console.log(req.body);
     if (!contactoN || !profesorDni) return res.status(400).json({ status: 'Faltan datos' });
 
     const data = await db.any('INSERT INTO TFG_anotaciones (contacto_n, dni, anyo, fecha, tipo, confirmado, anotacion) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [contactoN, profesorDni, anyo, fecha, tipo, confirmado, anotacion]);
