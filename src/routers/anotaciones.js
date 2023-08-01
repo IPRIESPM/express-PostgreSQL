@@ -15,18 +15,17 @@ router.get('/:contacto/:dni', async (req, res) => {
   }
 });
 
-router.post('/:contacto/:dni', async (req, res) => {
+router.post('', async (req, res) => {
   try {
-    const { contacto, dni } = req.params;
     const {
-      anyo, fecha, tipo, confirmado, conversacion,
+      anyo, fecha, tipo, anotacion, confirmado, profesorDni, contactoN,
     } = req.body;
-    if (!contacto || !dni || !anyo || !fecha || !tipo || !confirmado || !conversacion) return res.status(400).json({ status: 'Bad request' });
+    if (!contactoN || !profesorDni) return res.status(400).json({ status: 'Faltan datos' });
 
-    const data = await db.any('INSERT INTO TFG_anotaciones (contacto_n, dni, anyo, fecha, tipo, confirmado, conversacion) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [contacto, dni, anyo, fecha, tipo, confirmado, conversacion]);
+    const data = await db.any('INSERT INTO TFG_anotaciones (contacto_n, dni, anyo, fecha, tipo, confirmado, anotacion) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [contactoN, profesorDni, anyo, fecha, tipo, confirmado, anotacion]);
     return res.status(200).json({ status: data });
   } catch (error) {
-    return res.status(501).json({ status: error });
+    return res.status(501).json({ status: 'Error al crear la anotación' });
   }
 });
 
