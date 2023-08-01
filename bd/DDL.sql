@@ -97,7 +97,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE actualizar_version();
 
 create table TFG_anotaciones(
-    codigo integer primary key,
+    codigo integer primary key GENERATED ALWAYS AS IDENTITY,
     contacto_n integer references TFG_contactos(n),
     profesor_dni varchar(12) references TFG_profesores(dni),
     anyo integer,
@@ -105,7 +105,7 @@ create table TFG_anotaciones(
     tipo varchar(20) check (tipo in ('Teléfono','Correo','Persona')),
     confirmado boolean,
     anotacion varchar(255),
-    modificado timestamp DEFAULT CURRENT_TIMESTAMP,
+    modificado timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO TFG_versiones (tabla)

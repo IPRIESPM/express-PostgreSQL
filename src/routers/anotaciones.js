@@ -15,16 +15,17 @@ router.get('/:contacto/:dni', async (req, res) => {
   }
 });
 
-router.post('', async (req, res) => {
+router.post('/:contacto', async (req, res) => {
   try {
+    const { contacto } = req.params;
     const {
-      anyo, fecha, tipo, anotacion, confirmado, profesorDni, contactoN,
+      profesorDni, anyo, fecha, tipo, confirmado, anotacion,
     } = req.body;
 
     console.log(req.body);
-    if (!contactoN || !profesorDni) return res.status(400).json({ status: 'Faltan datos' });
+    if (!contacto || !profesorDni) return res.status(400).json({ status: 'Faltan datos' });
 
-    const data = await db.any('INSERT INTO TFG_anotaciones (contacto_n, profesor_dni, anyo, fecha, tipo, confirmado, anotacion) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [contactoN, profesorDni, anyo, fecha, tipo, confirmado, anotacion]);
+    const data = await db.any('INSERT INTO TFG_anotaciones (contacto_n, profesor_dni, anyo, fecha, tipo, confirmado, anotacion) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [contacto, profesorDni, anyo, fecha, tipo, confirmado, anotacion]);
     return res.status(200).json({ status: data });
   } catch (error) {
     console.log(error);
