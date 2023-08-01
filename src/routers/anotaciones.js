@@ -34,11 +34,11 @@ router.put('/:contacto/:dni', async (req, res) => {
   try {
     const { contacto, dni } = req.params;
     const {
-      anyo, fecha, tipo, confirmado, conversacion,
+      anyo, fecha, tipo, anotación, confirmado,
     } = req.body;
-    if (!contacto || !dni || !anyo || !fecha || !tipo || !confirmado || !conversacion) return res.status(400).json({ status: 'Bad request' });
+    if (!contacto || !dni || !anyo || !fecha || !tipo || !anotación) return res.status(400).json({ status: 'Bad request' });
 
-    const data = await db.any('UPDATE TFG_anotaciones SET anyo = $1, fecha = $2, tipo = $3, confirmado = $4, conversacion = $5 WHERE contacto_n = $6 AND dni = $7 RETURNING *', [anyo, fecha, tipo, confirmado, conversacion, contacto, dni]);
+    const data = await db.any('UPDATE TFG_anotaciones SET anyo = $1, fecha = $2, tipo = $3, confirmado = $4, conversacion = $5 WHERE contacto_n = $6 AND dni = $7 RETURNING *', [anyo, fecha, tipo, confirmado, contacto, dni]);
     return res.status(200).json({ status: data });
   } catch (error) {
     return res.status(501).json({ status: error });
