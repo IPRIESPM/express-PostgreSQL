@@ -27,6 +27,7 @@ router.post('', async (req, res) => {
     const data = await db.any('INSERT INTO TFG_anotaciones (contacto_n, dni, anyo, fecha, tipo, confirmado, anotacion) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [contactoN, profesorDni, anyo, fecha, tipo, confirmado, anotacion]);
     return res.status(200).json({ status: data });
   } catch (error) {
+    console.log(error);
     return res.status(501).json({ status: 'Error al crear la anotación' });
   }
 });
