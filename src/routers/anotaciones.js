@@ -1,9 +1,10 @@
 const express = require('express');
 const { db } = require('../database/connection');
+const { verifyToken } = require('../jwt/jwt');
 
 const router = express.Router();
 
-router.get('/:contact/', async (req, res) => {
+router.get('/:contact/', verifyToken, async (req, res) => {
   try {
     const { contact } = req.params;
     if (!contact) return res.status(400).json({ status: 'Tienes que indicar el contacto' });
@@ -15,7 +16,7 @@ router.get('/:contact/', async (req, res) => {
   }
 });
 
-router.post('/:contacto', async (req, res) => {
+router.post('/:contacto', verifyToken, async (req, res) => {
   try {
     const { contacto } = req.params;
     const {
@@ -48,7 +49,7 @@ router.put('/:contacto/:dni', async (req, res) => {
   }
 });
 
-router.delete('/:contact/', async (req, res) => {
+router.delete('/:contact/', verifyToken, async (req, res) => {
   try {
     const { contact } = req.params;
     if (!contact) return res.status(400).json({ status: 'Faltan datos' });
