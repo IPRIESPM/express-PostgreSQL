@@ -4,6 +4,26 @@ const { verifyToken } = require('../jwt/jwt');
 
 const router = express.Router();
 
+router.get('/', verifyToken, async (req, res) => {
+  try {
+    const query = `SELECT
+        *,
+        p.dni AS codigo_profesor,
+        p.nombre AS nombre_profesor
+      FROM
+        public.tfg_anotaciones AS a
+      JOIN
+        public.tfg_profesores AS p ON a.profesor_dni = p.dni
+      ORDER BY
+        a.modificado DESC;`;
+
+    const data = await db.any(query);
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(501).json({ status: 'Error al obtener las anotaciones' });
+  }
+});
+
 router.get('/:contact/', verifyToken, async (req, res) => {
   try {
     const { contact } = req.params;
