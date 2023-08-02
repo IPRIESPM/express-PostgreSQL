@@ -6,26 +6,33 @@ const router = express.Router();
 
 router.get('/', verifyToken, async (req, res) => {
   try {
-    const query = `SELECT
-      a.codigo,
-      p.dni AS codigo_profesor,
-      p.nombre AS nombre_profesor,
-      e.cif AS cif_empresa,
-      e.nombre AS nombre_empresa,
-      a.anyo,
-      a.fecha,
-      a.tipo,
-      a.confirmado,
-      a.anotacion,
-      a.modificado
-    FROM
-      public.tfg_anotaciones AS a
-    JOIN
-      public.tfg_profesores AS p ON a.profesor_dni = p.dni
-    JOIN
-      public.tfg_empresa AS e ON p.profesor_encargado = e.cif
-    ORDER BY
-      a.modificado DESC;
+    const query = `SELECT 
+    a.codigo,
+    p.dni AS dni_profesor,
+    p.nombre AS nombre_profesor,
+    e.cif AS cif_empresa,
+    e.nombre AS nombre_empresa,
+    c.nombre AS nombre_contacto,
+    c.correo AS correo_contacto,
+    c.telefono AS telefono_contacto,
+    c.dni AS dni_contacto,
+    c.tipo AS tipo_contacto,
+    a.anyo,
+    a.fecha,
+    a.tipo AS tipo_anotacion,
+    a.confirmado,
+    a.anotacion,
+    a.modificado
+FROM 
+    public.tfg_anotaciones AS a
+JOIN 
+    public.tfg_profesores AS p ON a.profesor_dni = p.dni
+JOIN 
+    public.tfg_empresa AS e ON p.profesor_encargado = e.cif
+JOIN 
+    public.tfg_contactos AS c ON a.contacto_n = c.n
+ORDER BY 
+    a.modificado DESC;
     `;
 
     const data = await db.any(query);
