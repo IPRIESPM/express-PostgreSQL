@@ -7,9 +7,15 @@ const router = express.Router();
 router.get('/', verifyToken, async (req, res) => {
   try {
     const query = `SELECT
-        *,
-        p.dni AS codigo_profesor,
-        p.nombre AS nombre_profesor
+    a.codigo,
+    p.dni AS codigo_profesor,
+    p.nombre AS nombre_profesor,
+    a.anyo,
+    a.fecha,
+    a.tipo,
+    a.confirmado,
+    a.anotacion,
+    a.modificado
       FROM
         public.tfg_anotaciones AS a
       JOIN
