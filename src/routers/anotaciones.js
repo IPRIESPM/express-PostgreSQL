@@ -38,6 +38,7 @@ ORDER BY
     const data = await db.any(query);
     return res.status(200).json(data);
   } catch (error) {
+    console.log(error);
     return res.status(501).json({ status: 'Error al obtener las anotaciones' });
   }
 });
