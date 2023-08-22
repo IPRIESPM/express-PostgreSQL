@@ -67,6 +67,9 @@ router.put('/:cod', async (req, res) => {
     const {
       anyo, fecha, tipo, anotacion, confirmado,
     } = req.body;
+
+    console.log(req.body);
+
     if (!cod || !anyo || !fecha || !tipo || !anotacion) return res.status(400).json({ status: 'Faltan datos' });
 
     const data = await db.any('UPDATE TFG_anotaciones SET anyo = $1, fecha = $2, tipo = $3, confirmado = $4, conversacion = $5 WHERE codigo = $6', [anyo, fecha, tipo, confirmado, cod, anotacion]);
