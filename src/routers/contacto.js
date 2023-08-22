@@ -47,7 +47,7 @@ router.get('/empresa/:cif', async (req, res) => {
     if (!cif) return res.status(400).json({ error: 'El cif es requerido' });
 
     const data = await db.any(queryContactos, cif);
-    if (data) return res.status(200).json({ status: true, data });
+    if (data) return res.status(200).json({ data });
 
     return res.status(404).json({ error: 'El contacto no existe' });
   } catch (error) {
