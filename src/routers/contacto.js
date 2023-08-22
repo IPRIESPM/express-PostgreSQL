@@ -37,10 +37,16 @@ router.get('/:id', async (req, res) => {
 
 router.get('/empresa/:cif', async (req, res) => {
   try {
+    const queryContactos = `SELECT *
+    FROM tfg_contactos c
+    JOIN tfg_contacto_empresa ce ON c.n = ce.contacto_n
+    JOIN tfg_empresa e ON ce.cif_empre = e.cif
+    WHERE e.cif = $1;
+  `;
     const { cif } = req.params;
     if (!cif) return res.status(400).json({ error: 'El cif es requerido' });
 
-    const data = await db.oneOrNone('SELECT * FROM TFG_contactos WHERE cif = $1', cif);
+    const data = await db.oneOrNone(queryContactos, cif);
     if (data) return res.status(200).json({ status: true, data });
 
     return res.status(404).json({ error: 'El contacto no existe' });
