@@ -37,7 +37,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/empresa/:cif', async (req, res) => {
   try {
-    const queryContactos = `SELECT *
+    const queryContactos = `SELECT c.*, e.nombre AS nombre_empresa
     FROM tfg_contactos c
     JOIN tfg_contacto_empresa ce ON c.n = ce.contacto_n
     JOIN tfg_empresa e ON ce.cif_empre = e.cif
