@@ -75,7 +75,7 @@ router.put('/:cod', async (req, res) => {
     const data = await db.any('UPDATE TFG_anotaciones SET anyo = $1, fecha = $2, tipo = $3, confirmado = $4, conversacion = $5 WHERE codigo = $6', [anyo, fecha, tipo, confirmado, cod, anotacion]);
     return res.status(200).json({ status: data });
   } catch (error) {
-    return res.status(501).json({ status: error });
+    return res.status(501).json({ status: 'Error al editar la anotación' });
   }
 });
 
