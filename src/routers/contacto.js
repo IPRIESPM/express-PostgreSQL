@@ -45,6 +45,7 @@ router.get('/empresa/:cif', async (req, res) => {
 
     return res.status(404).json({ error: 'El contacto no existe' });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: 'Error al obtener el contacto' });
   }
 });
