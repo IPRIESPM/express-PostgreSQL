@@ -57,6 +57,7 @@ router.post('/', async (req, res) => {
     } = req.body;
     console.log(req.body);
     if (!empresa || !nombre) {
+      console.log('Empres | nombre', empresa, nombre);
       return res.status(400).json({ error: 'dni y empresa son requeridos' });
     }
     if (principal === 'true') principal = !!'true';
