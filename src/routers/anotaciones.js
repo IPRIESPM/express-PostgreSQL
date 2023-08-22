@@ -70,7 +70,7 @@ router.put('/:cod', async (req, res) => {
 
     console.log(req.body);
 
-    if (!cod || !anyo || !fecha || !tipo || !anotacion) return res.status(400).json({ status: 'Faltan datos' });
+    if (!cod || !anyo || !fecha || !tipo) return res.status(400).json({ status: 'Faltan datos' });
 
     const data = await db.any('UPDATE TFG_anotaciones SET anyo = $1, fecha = $2, tipo = $3, confirmado = $4, anotacion = $5 WHERE codigo = $6', [anyo, fecha, tipo, confirmado, anotacion, cod]);
     return res.status(200).json({ status: data });
