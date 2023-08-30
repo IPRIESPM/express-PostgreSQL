@@ -7,21 +7,20 @@ const router = express.Router();
 router.get('/', verifyToken, async (req, res) => {
   try {
     const query = `SELECT a.anotacion,
-    a.fecha,
-    a.confirmado,
-    p.nombre AS nombre_profesor,
-    p.dni AS dni_profesor,
-    c.nombre AS nombre_contacto,
-    c.n AS numero_contacto,
-    e.nombre AS nombre_empresa,
-    e.cif AS cif_empresa
-FROM public.tfg_anotaciones AS a
-JOIN public.tfg_profesores AS p ON a.profesor_dni = p.dni
-JOIN public.tfg_contactos AS c ON a.contacto_n = c.n
-JOIN public.tfg_contacto_empresa AS ce ON c.n = ce.contacto_n
-JOIN public.tfg_empresa AS e ON ce.cif_empre = e.cif
-ORDER BY a.modificado DESC;
-    `;
+      a.fecha,
+      a.confirmado,
+      p.nombre AS nombre_profesor,
+      p.dni AS dni_profesor,
+      c.nombre AS nombre_contacto,
+      c.n AS numero_contacto,
+      e.nombre AS nombre_empresa,
+      e.cif AS cif_empresa
+    FROM public.tfg_anotaciones AS a
+    JOIN public.tfg_profesores AS p ON a.profesor_dni = p.dni
+    JOIN public.tfg_contactos AS c ON a.contacto_n = c.n
+    JOIN public.tfg_contacto_empresa AS ce ON c.n = ce.contacto_n
+    JOIN public.tfg_empresa AS e ON ce.cif_empre = e.cif
+    ORDER BY a.modificado DESC;`;
 
     const data = await db.any(query);
     return res.status(200).json(data);
@@ -65,14 +64,14 @@ router.put('/:cod', async (req, res) => {
   try {
     const { cod } = req.params;
     const {
-      anyo, fecha, tipo, anotacion, confirmado,
+      year, date, type, annotation, confirmed,
     } = req.body;
 
     console.log(req.body);
 
-    if (!cod || !anyo || !fecha || !tipo) return res.status(400).json({ status: 'Faltan datos' });
+    if (!cod || !year || !date || !type) return res.status(400).json({ status: 'Faltan datos' });
 
-    const data = await db.any('UPDATE TFG_anotaciones SET anyo = $1, fecha = $2, tipo = $3, confirmado = $4, anotacion = $5 WHERE codigo = $6', [anyo, fecha, tipo, confirmado, anotacion, cod]);
+    const data = await db.any('UPDATE TFG_anotaciones SET anyo = $1, fecha = $2, tipo = $3, confirmado = $4, anotacion = $5 WHERE codigo = $6', [year, date, type, confirmed, annotation, cod]);
     return res.status(200).json({ status: data });
   } catch (error) {
     console.log(error);
