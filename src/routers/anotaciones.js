@@ -20,7 +20,7 @@ router.get('/', verifyToken, async (req, res) => {
     JOIN public.tfg_contactos AS c ON a.contacto_n = c.n
     JOIN public.tfg_contacto_empresa AS ce ON c.n = ce.contacto_n
     JOIN public.tfg_empresa AS e ON ce.cif_empre = e.cif
-    ORDER BY a.modificado DESC;`;
+    ORDER BY a.fecha DESC;`;
 
     const data = await db.any(query);
     return res.status(200).json(data);
