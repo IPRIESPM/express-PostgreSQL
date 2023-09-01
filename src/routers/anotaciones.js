@@ -9,6 +9,7 @@ router.get('/', verifyToken, async (req, res) => {
     const query = `SELECT a.anotacion,
       a.fecha,
       a.confirmado,
+      a.codigo,
       p.nombre AS nombre_profesor,
       p.dni AS dni_profesor,
       c.nombre AS nombre_contacto,
