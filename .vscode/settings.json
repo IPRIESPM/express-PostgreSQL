@@ -12,5 +12,6 @@
     "plpgsql",
     "RRHH",
     "telefono"
-  ]
+  ],
+  "discord.enabled": false
 }
