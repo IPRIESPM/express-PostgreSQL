@@ -9,13 +9,12 @@ router.get('/', verifyToken, async (req, res) => {
     const query = `SELECT a.anotacion,
       a.fecha,
       a.confirmado,
-      a.codigo,
       p.nombre AS nombre_profesor,
       p.dni AS dni_profesor,
       c.nombre AS nombre_contacto,
       c.n AS numero_contacto,
       e.nombre AS nombre_empresa,
-      e.cif AS cif_empresa,
+      e.cif AS cif_empresa
     FROM public.tfg_anotaciones AS a
     JOIN public.tfg_profesores AS p ON a.profesor_dni = p.dni
     JOIN public.tfg_contactos AS c ON a.contacto_n = c.n
