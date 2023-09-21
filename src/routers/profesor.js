@@ -16,7 +16,6 @@ router.get('/', verifyToken, verifyVersion, async (req, res) => {
       data,
       version: versionData,
     };
-    console.log(response);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -44,7 +43,6 @@ router.post('/', encriptarPassword, async (req, res) => {
     const {
       dni, nombre, telefono, contrasena, correo,
     } = req.body;
-    console.log(req.body);
     if (!dni || !nombre || !contrasena) {
       console.log('error en los campos');
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
@@ -63,7 +61,6 @@ router.post('/', encriptarPassword, async (req, res) => {
 
 router.delete('/:dni', verifyToken, async (req, res) => {
   const { dni } = req.params;
-  console.log('Eliminando: ', dni);
   try {
     const exist = await db.oneOrNone('SELECT 1 FROM TFG_profesores WHERE dni = $1', dni);
     if (!exist) return res.status(404).json({ error: 'El docente no existe' });
@@ -91,7 +88,6 @@ router.put('/:dni', encriptarPassword, verifyToken, async (req, res) => {
 
     await db.none('UPDATE TFG_profesores SET  nombre = $2, telefono = $3, correo = $4, contrasena = $5 WHERE dni = $1', [dni, nombre, telefono, correo, contrasena]);
 
-    console.log(dni, nombre, telefono, correo, contrasena);
     return res.status(200).json({
       dni, nombre, telefono, correo, contrasena,
     });

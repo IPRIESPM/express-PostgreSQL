@@ -62,9 +62,7 @@ router.post('/', async (req, res) => {
     const {
       dni, nombre, correo, telefono, tipo, empresa, funciones,
     } = req.body;
-    console.log(req.body);
     if (!empresa || !nombre) {
-      console.log('Empres | nombre', empresa, nombre);
       return res.status(400).json({ error: 'dni y empresa son requeridos' });
     }
     if (principal === 'true') principal = !!'true';
@@ -117,7 +115,6 @@ router.put('/', async (req, res) => {
     const {
       n, dni, nombre, correo, telefono, tipo, empresa, funciones,
     } = req.body;
-    console.log(req.body);
     if (!empresa || !n) {
       return res.status(400).json({ error: 'dni y empresa son requeridos' });
     }

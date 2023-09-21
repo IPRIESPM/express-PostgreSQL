@@ -19,7 +19,6 @@ router.get('/', verifyToken, verifyVersion, async (req, res) => {
       data,
       version: versionData,
     };
-    console.log(response);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -45,16 +44,12 @@ router.get('/:cif', verifyToken, async (req, res) => {
 
   const queryPuestos = 'SELECT cod, anyo, vacantes, ciclo, descrip, horario FROM tfg_puestos WHERE cif_empresa = $1;';
   try {
-    console.log(req.params);
     const { cif } = req.params;
     if (!cif) return res.status(400).json({ error: 'El CIF es requerido' });
 
     const dataEmpresa = await db.oneOrNone(queryEmpresa, cif);
-    console.log(dataEmpresa);
     const dataContactos = await db.any(queryContactos, cif);
-    console.log(dataContactos);
     const dataPuestos = await db.any(queryPuestos, cif);
-    console.log(dataPuestos);
 
     const data = {
       empresa: dataEmpresa,
@@ -89,7 +84,6 @@ router.post('/', verifyToken, async (req, res) => {
     const {
       cif, nombre, localidad, comunidad, direccion, telefono, profesor,
     } = req.body;
-    console.log(req.body);
     if (!cif || !nombre || !profesor) {
       console.log('error en los campos');
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
@@ -108,7 +102,6 @@ router.post('/', verifyToken, async (req, res) => {
 
 router.delete('/:cif', verifyToken, async (req, res) => {
   const { cif } = req.params;
-  console.log('Eliminando: ', cif);
   try {
     const exist = await db.oneOrNone('SELECT 1 FROM TFG_empresa WHERE cif = $1', cif);
     if (!exist) return res.status(404).json({ error: 'La empresa no existe' });
@@ -121,13 +114,9 @@ router.delete('/:cif', verifyToken, async (req, res) => {
 });
 
 router.put('/:cif', verifyToken, async (req, res) => {
-  const { cif: cifTest } = req.params;
   const {
     cif, nombre, localidad, comunidad, direccion, telefono, profesor,
   } = req.body;
-  console.log('put');
-  console.log(req.body);
-  console.log(cifTest);
   try {
     const exist = await db.oneOrNone('SELECT 1 FROM TFG_empresa WHERE cif = $1', cif);
     if (!exist) return res.status(404).json({ error: 'La empresa no existe' });

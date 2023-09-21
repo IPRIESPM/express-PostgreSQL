@@ -50,7 +50,6 @@ router.post('/:contacto', verifyToken, async (req, res) => {
       profesorDni, anyo, fecha, tipo, confirmado, anotacion,
     } = req.body;
 
-    console.log(req.body);
     if (!contacto || !profesorDni) return res.status(400).json({ status: 'Faltan datos' });
 
     const data = await db.any('INSERT INTO TFG_anotaciones (contacto_n, profesor_dni, anyo, fecha, tipo, confirmado, anotacion) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [contacto, profesorDni, anyo, fecha, tipo, confirmado, anotacion]);
@@ -67,8 +66,6 @@ router.put('/:cod', async (req, res) => {
     const {
       year, date, type, annotation, confirmed,
     } = req.body;
-
-    console.log(req.body);
 
     if (!cod || !year || !date || !type) return res.status(400).json({ status: 'Faltan datos' });
 

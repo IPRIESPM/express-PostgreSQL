@@ -10,10 +10,8 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-// Preparamos CORS
 app.use(cors(corsOptions));
 
-// Importamos los routers
 const contactoRouter = require('../routers/contacto');
 const empresaRouter = require('../routers/empresa');
 const puestosRouter = require('../routers/puestos');
